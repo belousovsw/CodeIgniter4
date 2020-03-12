@@ -493,9 +493,10 @@ class Session implements SessionInterface
 	 * Replaces the legacy method $session->userdata();
 	 *
 	 * @param  string $key Identifier of the session property to retrieve
-	 * @return array|null	The property value(s)
+	 * @param  mixed  $defaultValue Returned if $key not exist or session empty, empty array by default
+	 * @return mixed  The property value(s)
 	 */
-	public function get(string $key = null)
+	public function get(string $key = null, $defaultValue = [])
 	{
 		if (! empty($key) && ! is_null($value = dot_array_search($key, $_SESSION ?? [])))
 		{
@@ -503,12 +504,12 @@ class Session implements SessionInterface
 		}
 		elseif (empty($_SESSION))
 		{
-			return [];
+			return $defaultvalue;
 		}
 
 		if (! empty($key))
 		{
-			return null;
+			return $defaultvalue;
 		}
 
 		$userdata = [];
@@ -525,7 +526,7 @@ class Session implements SessionInterface
 			}
 		}
 
-		return $userdata;
+		return empty($userdata) ? $defaultvalue : $userdata;
 	}
 
 	//--------------------------------------------------------------------
